@@ -1,0 +1,94 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #18181b;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: #22d3ee;
+  color: #082f49;
+}
+
+.dark ::selection {
+  background: #155e75;
+  color: #ecfeff;
+}
+
+.prose {
+  max-width: none;
+}
+
+.prose :where(h2, h3, h4) {
+  scroll-margin-top: 6rem;
+}
+
+.prose :where(a) {
+  word-break: break-word;
+}
+
+.prose :where(pre) {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.prose :where(code):not(:where(pre code)) {
+  background: #f4f4f5;
+  color: #18181b;
+  border: 1px solid #e4e4e7;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.4rem;
+  font-size: 0.9em;
+}
+
+.dark .prose :where(code):not(:where(pre code)) {
+  background: #27272a;
+  color: #f4f4f5;
+  border-color: #3f3f46;
+}
+
+.markdown-anchor {
+  display: inline-block;
+  margin-left: 0.35rem;
+  opacity: 0;
+  color: #a1a1aa;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.prose :where(h2, h3, h4):hover .markdown-anchor,
+.prose :where(h2, h3, h4):focus-within .markdown-anchor {
+  opacity: 1;
+}
+
+.dark .markdown-anchor {
+  color: #71717a;
+}
