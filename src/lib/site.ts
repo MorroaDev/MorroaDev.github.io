@@ -3,7 +3,7 @@ export const siteConfig = {
   legalName: "Morroa Blog",
   title: "Morroa · 记录思考、代码与产品",
   description:
-    "一个支持 Markdown 文章、标签、归档、搜索、RSS 与深色模式的现代静态博客。",
+    "记录学习、思考与实践，分享代码、技术与一路上的探索。",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://morroa.com",
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
   language: "zh-CN",
