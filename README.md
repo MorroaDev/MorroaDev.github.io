@@ -15,8 +15,8 @@
 ## 本地开发
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 打开 [http://localhost:3000](http://localhost:3000)。
@@ -46,8 +46,8 @@ draft: false
 ## 构建与预览
 
 ```bash
-npm run build
-npm start
+pnpm run build
+pnpm start
 ```
 
 构建产物输出到 `out` 目录。
@@ -56,7 +56,7 @@ npm start
 
 1. 将仓库导入 Vercel。
 2. Framework Preset 选择 **Next.js**。
-3. Build Command 使用 `npm run build`。
+3. Build Command 使用 `pnpm run build`。
 4. 如果需要，在环境变量中设置 `NEXT_PUBLIC_SITE_URL`。
 
 Vercel 不需要设置 `NEXT_PUBLIC_BASE_PATH`，除非你把它部署在子路径。

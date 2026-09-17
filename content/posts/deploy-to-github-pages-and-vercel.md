@@ -31,7 +31,7 @@ Vercel 会自动识别 Next.js 项目：
 
 1. 将仓库导入 Vercel
 2. 框架预设选择 Next.js
-3. 执行 `npm run build`
+3. 执行 `pnpm run build`
 4. 输出目录保持默认即可
 
 如果使用了项目子路径，请设置 `NEXT_PUBLIC_BASE_PATH`。
@@ -45,11 +45,13 @@ GitHub Pages 需要先构建出 `out` 目录，再由 Actions 发布。
 ```yaml
 steps:
   - uses: actions/checkout@v4
+  - uses: pnpm/action-setup@v4
   - uses: actions/setup-node@v4
     with:
       node-version: 22
-  - run: npm ci
-  - run: npm run build
+      cache: pnpm
+  - run: pnpm install --frozen-lockfile
+  - run: pnpm run build
   - uses: actions/upload-pages-artifact@v3
     with:
       path: out
