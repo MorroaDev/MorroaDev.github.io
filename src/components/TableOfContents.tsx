@@ -65,14 +65,14 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
         目录
       </div>
       <nav className="max-h-[70vh] overflow-y-auto pr-1 text-sm">
-        <ul className="space-y-1.5">
+        <ul className="space-y-0.5">
           {visibleHeadings.map((heading) => (
             <li key={heading.id}>
               <button
                 type="button"
                 onClick={() => scrollToHeading(heading.id)}
                 className={cn(
-                  "w-full rounded-lg px-2.5 py-1.5 text-left leading-6 text-zinc-600 transition-colors hover:bg-white hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white",
+                  "w-full rounded-lg px-2.5 py-1 text-left leading-6 text-zinc-600 transition-colors hover:bg-white hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white",
                   heading.level === 3 && "pl-6 text-xs",
                   activeId === heading.id &&
                     "bg-white font-medium text-cyan-700 dark:bg-zinc-800 dark:text-cyan-300",

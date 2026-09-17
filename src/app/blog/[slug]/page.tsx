@@ -97,7 +97,7 @@ export default async function PostPage({ params }: PostPageProps) {
     <>
       <ReadingProgress />
       <article className="mx-auto w-full max-w-6xl px-5 py-12 lg:py-16">
-        <header className="mx-auto max-w-3xl">
+        <header className="mx-auto w-full max-w-3xl lg:max-w-none lg:pr-[300px]">
           <Link
             href={withBase("/blog")}
             className="mb-8 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-cyan-600 dark:text-zinc-400 dark:hover:text-cyan-400"
