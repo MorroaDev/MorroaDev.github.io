@@ -17,7 +17,7 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 const features = [
   {
     title: "Markdown 原生写作",
-    description: "把 .md 文件放进 content/posts，即可自动生成文章页。",
+    description: "把 .md 文件放进 content 下的分类文件夹，即可自动生成文章页。",
     icon: FileText,
   },
   {
@@ -102,7 +102,7 @@ export default function HomePage() {
                   </Link>
                 ))
               ) : (
-                <p className="text-sm text-zinc-400">暂无文章，先在 content/posts 中创建一篇吧。</p>
+                <p className="text-sm text-zinc-400">暂无文章，先在 content 下的分类文件夹中创建一篇吧。</p>
               )}
             </div>
           </div>

@@ -5,8 +5,9 @@ import GithubSlugger from "github-slugger";
 import { withBase } from "@/lib/site";
 
 export const POSTS_PER_PAGE = 6;
-export const POSTS_DIRECTORY = path.join(process.cwd(), "content", "posts");
-export const PAGES_DIRECTORY = path.join(process.cwd(), "content", "pages");
+export const CONTENT_DIRECTORY = path.join(process.cwd(), "content");
+export const PAGES_DIRECTORY = path.join(CONTENT_DIRECTORY, "pages");
+const IGNORED_DIRECTORIES = new Set(["pages"]);
 
 export type Heading = {
   level: number;
@@ -18,6 +19,7 @@ export type Post = {
   slug: string;
   title: string;
   description: string;
+  category: string;
   date: string;
   updated?: string;
   tags: string[];
@@ -46,6 +48,51 @@ type PostFrontmatter = {
   featured?: boolean;
   draft?: boolean;
 };
+
+function collectMarkdownFiles(directory: string): string[] {
+  if (!fs.existsSync(directory)) {
+    return [];
+  }
+
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      if (IGNORED_DIRECTORIES.has(entry.name)) {
+        return [];
+      }
+
+      return collectMarkdownFiles(fullPath);
+    }
+
+    if (entry.isFile() && entry.name.endsWith(".md")) {
+      return [fullPath];
+    }
+
+    return [];
+  });
+}
+
+function getPostFileLocation(filePath: string, allFilePaths: string[]) {
+  const relativePath = path.relative(CONTENT_DIRECTORY, filePath);
+  const parts = relativePath.split(path.sep);
+  const fileName = parts.pop() ?? relativePath;
+  const category = parts[0] ?? "";
+  const baseSlug = fileName.replace(/\.md$/, "");
+  const folderSlug = parts
+    .map((segment) => segment.replace(/[^a-zA-Z0-9-_]/g, "-"))
+    .filter(Boolean)
+    .join("-");
+  const duplicateCount = allFilePaths.filter(
+    (candidate) => path.basename(candidate, ".md") === baseSlug,
+  ).length;
+  const slug = duplicateCount > 1 && folderSlug ? `${folderSlug}-${baseSlug}` : baseSlug;
+
+  return {
+    slug,
+    category,
+  };
+}
 
 function slugifyHeading(text: string) {
   const slugger = new GithubSlugger();
@@ -105,7 +152,7 @@ function extractHeadings(content: string): Heading[] {
   return headings;
 }
 
-function parsePostFile(filePath: string, slug: string): Post {
+function parsePostFile(filePath: string, slug: string, category: string): Post {
   const raw = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(raw);
   const frontmatter = data as PostFrontmatter;
@@ -122,6 +169,7 @@ function parsePostFile(filePath: string, slug: string): Post {
     slug,
     title,
     description,
+    category,
     date: frontmatter.date,
     updated: frontmatter.updated,
     tags,
@@ -138,19 +186,17 @@ function parsePostFile(filePath: string, slug: string): Post {
 }
 
 export function getAllPosts(options?: { includeDrafts?: boolean }): Post[] {
-  if (!fs.existsSync(POSTS_DIRECTORY)) {
+  if (!fs.existsSync(CONTENT_DIRECTORY)) {
     return [];
   }
 
   const includeDrafts = options?.includeDrafts ?? false;
-  const fileNames = fs
-    .readdirSync(POSTS_DIRECTORY)
-    .filter((name) => name.endsWith(".md"));
+  const filePaths = collectMarkdownFiles(CONTENT_DIRECTORY);
 
-  return fileNames
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, "");
-      return parsePostFile(path.join(POSTS_DIRECTORY, fileName), slug);
+  return filePaths
+    .map((filePath) => {
+      const { slug, category } = getPostFileLocation(filePath, filePaths);
+      return parsePostFile(filePath, slug, category);
     })
     .filter((post) => includeDrafts || !post.draft)
     .sort(
@@ -161,14 +207,7 @@ export function getAllPosts(options?: { includeDrafts?: boolean }): Post[] {
 
 export function getPostBySlug(slug: string): Post | undefined {
   const safeSlug = slug.replace(/\.md$/, "").replace(/[^a-zA-Z0-9-_]/g, "");
-  const filePath = path.join(POSTS_DIRECTORY, `${safeSlug}.md`);
-
-  if (!fs.existsSync(filePath)) {
-    return undefined;
-  }
-
-  const post = parsePostFile(filePath, safeSlug);
-  return post.draft ? undefined : post;
+  return getAllPosts().find((post) => post.slug === safeSlug);
 }
 
 export function getPostSlugs() {

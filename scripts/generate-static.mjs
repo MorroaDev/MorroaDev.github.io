@@ -3,7 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 
 const root = process.cwd();
-const postsDirectory = path.join(root, "content", "posts");
+const contentDirectory = path.join(root, "content");
 const publicDirectory = path.join(root, "public");
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://morroa.com").replace(/\/$/, "");
@@ -18,6 +18,51 @@ function withBase(pathname) {
 
 function absoluteUrl(pathname) {
   return new URL(withBase(pathname), `${baseUrl}/`).toString();
+}
+
+function collectMarkdownFiles(directory) {
+  if (!fs.existsSync(directory)) {
+    return [];
+  }
+
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      if (entry.name === "pages") {
+        return [];
+      }
+
+      return collectMarkdownFiles(fullPath);
+    }
+
+    if (entry.isFile() && entry.name.endsWith(".md")) {
+      return [fullPath];
+    }
+
+    return [];
+  });
+}
+
+function getPostFileLocation(filePath, allFilePaths) {
+  const relativePath = path.relative(contentDirectory, filePath);
+  const parts = relativePath.split(path.sep);
+  const fileName = parts.pop();
+  const category = parts[0] || "";
+  const baseSlug = fileName.replace(/\.md$/, "");
+  const folderSlug = parts
+    .map((segment) => segment.replace(/[^a-zA-Z0-9-_]/g, "-"))
+    .filter(Boolean)
+    .join("-");
+  const duplicateCount = allFilePaths.filter(
+    (candidate) => path.basename(candidate, ".md") === baseSlug,
+  ).length;
+  const slug = duplicateCount > 1 && folderSlug ? `${folderSlug}-${baseSlug}` : baseSlug;
+
+  return {
+    slug,
+    category,
+  };
 }
 
 function stripMarkdown(markdown) {
@@ -46,16 +91,12 @@ function safeCdata(value) {
 }
 
 function readPosts() {
-  if (!fs.existsSync(postsDirectory)) {
-    return [];
-  }
+  const filePaths = collectMarkdownFiles(contentDirectory);
 
-  return fs
-    .readdirSync(postsDirectory)
-    .filter((fileName) => fileName.endsWith(".md"))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, "");
-      const raw = fs.readFileSync(path.join(postsDirectory, fileName), "utf8");
+  return filePaths
+    .map((filePath) => {
+      const { slug, category } = getPostFileLocation(filePath, filePaths);
+      const raw = fs.readFileSync(filePath, "utf8");
       const { data, content } = matter(raw);
       const title = String(data.title || slug);
       const description = String(data.description || "");
@@ -67,6 +108,7 @@ function readPosts() {
         slug,
         title,
         description,
+        category,
         date,
         tags,
         draft,
@@ -84,6 +126,7 @@ function generateSearchIndex(posts) {
     slug: post.slug,
     title: post.title,
     description: post.description,
+    category: post.category,
     tags: post.tags,
     date: post.date,
     content: stripMarkdown(post.content),

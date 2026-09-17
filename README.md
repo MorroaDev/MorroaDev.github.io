@@ -23,7 +23,7 @@ pnpm run dev
 
 ## 写作
 
-文章放在 `content/posts` 目录下，文件名就是文章 slug。例如 `content/posts/my-first-post.md`：
+文章放在 `content` 目录下的任意子文件夹中（`content/pages` 除外），文件夹名会作为文章分类，文件名就是文章 slug。例如 `content/first/my-first-post.md`：
 
 ```md
 ---
@@ -94,7 +94,7 @@ NEXT_PUBLIC_GISCUS_CATEGORY_ID=your-category-id
 ## 项目结构
 
 ```text
-content/posts/          Markdown 文章
+content/                Markdown 文章（可按文件夹分类）
 content/pages/          静态页面
 public/images/          图片与文章封面
 scripts/                搜索索引和 RSS 生成脚本
