@@ -139,7 +139,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <PostList posts={latestPosts} />
+        <PostList posts={latestPosts} columns={2} />
       </section>
 
       <section className="border-y border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/40">

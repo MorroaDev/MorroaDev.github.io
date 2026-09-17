@@ -1,7 +1,13 @@
 import type { Post } from "@/lib/posts";
 import { PostCard } from "@/components/PostCard";
+import { cn } from "@/lib/utils";
 
-export function PostList({ posts }: { posts: Post[] }) {
+type PostListProps = {
+  posts: Post[];
+  columns?: 2 | 3;
+};
+
+export function PostList({ posts, columns = 3 }: PostListProps) {
   if (posts.length === 0) {
     return (
       <div className="rounded-3xl border border-dashed border-zinc-300 p-12 text-center dark:border-zinc-700">
@@ -11,7 +17,12 @@ export function PostList({ posts }: { posts: Post[] }) {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div
+      className={cn(
+        "grid gap-5 sm:grid-cols-2",
+        columns === 3 && "xl:grid-cols-3",
+      )}
+    >
       {posts.map((post, index) => (
         <PostCard key={post.slug} post={post} priority={index < 2} />
       ))}
