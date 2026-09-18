@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://morroa.com/
+Sitemap: https://morroa.com/sitemap.xml

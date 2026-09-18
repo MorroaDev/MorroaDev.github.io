@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0ea5e9"/>
+      <stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect x="70" y="120" width="1060" height="435" rx="34" fill="#ffffff" opacity=".14"/>
+  <text x="130" y="310" font-family="Consolas, monospace" font-size="58" font-weight="700" fill="#ffffff"># Markdown</text>
+  <text x="130" y="410" font-family="Consolas, monospace" font-size="32" fill="#ffffff" opacity=".85">Write less, format faster.</text>
+</svg>

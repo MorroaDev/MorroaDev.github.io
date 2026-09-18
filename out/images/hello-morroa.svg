@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <circle cx="1050" cy="120" r="180" fill="#ffffff" opacity=".12"/>
+  <circle cx="120" cy="600" r="220" fill="#ffffff" opacity=".08"/>
+  <text x="80" y="330" font-family="Segoe UI, sans-serif" font-size="96" font-weight="700" fill="#ffffff">Hello, Morroa</text>
+  <text x="84" y="420" font-family="Segoe UI, sans-serif" font-size="34" fill="#ffffff" opacity=".85">Markdown-powered blog</text>
+</svg>
